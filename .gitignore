@@ -1,12 +1,7 @@
-# Node artifact files
-node_modules/
+package-lock.json
+package.json
+/tailwind_installation/node_modules/
 dist/
-
-# Compiled Java class files
-*.class
-
-# Compiled Python bytecode
-*.py[cod]
-
-# Log files
-*.log
+node_modules/
+Thumbs.db
+.DS_Store
