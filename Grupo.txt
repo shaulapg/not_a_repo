@@ -1,0 +1,20 @@
+CREATE TABLE `Grupo`(
+	`idGrupo` varchar(20) COLLATE utf8_spanish_ci NOT NULL,
+	`Posgrado` varchar(30) COLLATE utf8_spanish_ci NOT NULL,
+	`Generación` int(4) NOT NULL,
+	`FechaLimitePrueba` date NOT NULL,
+	`FechaZoomGrupal` date NOT NULL,
+	`EnlaceZoom` varchar(60) COLLATE utf8_spanish_ci NOT NULL
+);
+
+INSERT INTO `Grupo` (`idGrupo`, `Posgrado`, `Generación`, `FechaLimitePrueba`, `FechaZoomGrupal`, `EnlaceZoom`) VALUES
+('G0001', 'Finanzas', 2022, '2025-04-22', '2025-04-23', 'https://itesm.zoom.us/j/86934604350'),
+('G0002', 'Economía', 2019, '2025-05-22', '2025-05-23', 'https://itesm.zoom.us/j/86934604350'),
+('G0003', 'Marketing Digital', 2020, '2025-03-01', '2025-03-02', 'https://itesm.zoom.us/j/86934604350'),
+('G0004', 'Arquitectura', 2024, '2025-06-07', '2025-06-08', 'https://itesm.zoom.us/j/86934604350'),
+('G0005', 'Negocios', 2021, '2025-04-11', '2025-04-12', 'https://itesm.zoom.us/j/86934604350'),
+('G0006', 'Programación', 2022, '2025-05-20', '2025-05-21', 'https://itesm.zoom.us/j/86934604350'),
+('G0007', 'Comunicación', 2019, '2025-07-12', '2025-07-13', 'https://itesm.zoom.us/j/86934604350'),
+('G0008', 'Biología', 2018, '2025-07-02', '2025-07-03', 'https://itesm.zoom.us/j/86934604350'),
+('G0009', 'Mecatrónica', 2020, '2025-04-30', '2025-05-01', 'https://itesm.zoom.us/j/86934604350'),
+('G0000', 'Mecánica', 2024, '2025-05-12', '2025-05-23', 'https://itesm.zoom.us/j/86934604350');
