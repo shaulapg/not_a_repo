@@ -1,1 +1,1 @@
-Lab 20: HEcho con Frida Arcadia
+Lab 20: Hecho con Frida Arcadia
