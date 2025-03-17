@@ -1,0 +1,431 @@
+SELECT * FROM Materiales;
+
+1000	Varilla 3/16	100	10
+1010	Varilla 4/32	115	11.5
+
+Renglones: 45
+
+
+
+SELECT * FROM Materiales
+WHERE clave=1000;
+
+1000	Varilla 3/16	100	10
+
+Renglones: 1
+
+
+
+SELECT clave, rfc, fecha FROM entregan;
+
+1000	AAAA800101	2001-12-13
+1200	EEEE800101	2003-03-15
+
+Renglones: 87
+
+
+
+SELECT * FROM materiales,entregan
+WHERE materiales.clave = entregan.clave;
+
+1000	Varilla 3/16	100	10	1000	AAAA800101	5000	2001-12-13	165
+1000	Varilla 3/16	100	10	1000	AAAA800101	5019	1999-07-13	254
+
+Renglones: 87
+
+Si algún material no ha se ha entregado ¿Aparecería en el resultado de esta consulta? Sí
+
+
+
+SELECT * FROM entregan,proyectos
+WHERE entregan.numero <= proyectos.numero;
+
+1000	AAAA800101	5000	2001-12-13	165	5000	Vamos Mexico
+1200	EEEE800101	5000	2003-03-15	177	5000	Vamos Mexico
+
+Renglones: 836
+
+
+
+(SELECT * FROM entregan WHERE clave=1450)
+UNION
+(SELECT * FROM entregan WHERE clave=1300);
+
+1300	GGGG800101	5005	2004-02-28	521
+1300	GGGG800101	5010	2001-02-10	119
+
+Renglones: 2
+
+¿Cuál sería una consulta que obtuviera el mismo resultado sin usar el operador Unión? Compruébalo.
+SELECT * FROM entregan WHERE clave = 1450 OR clave = 1300;
+
+
+
+SELECT E.clave
+FROM entregan E
+JOIN entregan E2 ON E.clave = E2.clave
+WHERE E.numero = 5001
+AND E2.numero = 5018;
+
+1010
+
+Renglones: 1
+
+
+
+SELECT * FROM entregan
+WHERE clave!=1000;
+
+1010	BBBB800101	5001	1998-07-28	528
+1010	BBBB800101	5018	1997-02-09	523
+1020	CCCC800101	5002	2003-12-16	582
+
+Renglones: 85
+
+
+
+SELECT * FROM entregan,materiales;
+
+1000	AAAA800101	5000	2001-12-13	165	2000	Jabón	125	12.5
+1000	AAAA800101	5000	2001-12-13	165	1430	Pintura B1022	125	12.5
+1000	AAAA800101	5000	2001-12-13	165	1420	Pintura C1012	125	12.5
+
+Renglones: 1000 (MAX de SQL, en realidad 3915)
+
+¿Cómo está definido el número de tuplas de este resultado en términos del número de tuplas de entregan y de materiales? Numero de tuplas en entregan por número de tuplas en materiales (87 x 45 = 3915)
+
+
+
+SELECT M.descripcion
+FROM materiales M
+JOIN entregan E ON M.clave = E.clave
+WHERE E.fecha >= '2000-01-01'
+AND E.fecha <= '2000-12-31';
+
+Recubrimiento P1028
+Pintura B1021
+Cantera blanca
+
+Renglones: 12
+
+¿Por qué aparecen varias veces algunas descripciones de material? Porque algunos materiales fueron entregados más de una vez en el año 2000
+
+SELECT DISTINCT M.descripcion
+FROM materiales M
+JOIN entregan E ON M.clave = E.clave
+WHERE E.fecha >= '2000-01-01'
+AND E.fecha <= '2000-12-31';
+
+¿Qué resultado obtienes en esta ocasión? Los mismos resultados pero sin repeticiones (10 renglones)
+
+
+
+SELECT P.numero, P.denominacion, E.fecha, E.cantidad
+FROM proyectos P
+JOIN entregan E ON P.numero = E.numero
+ORDER BY P.numero, E.fecha DESC;
+
+5000	Vamos Mexico	2003-03-15	177
+5000	Vamos Mexico	2001-12-13	165
+5000	Vamos Mexico	1999-04-07	382
+
+Renglones: 87
+
+
+
+SELECT * FROM materiales where Descripcion LIKE 'Si%';
+
+1120	Sillar rosa	100	10
+1130	Sillar gris	110	11
+
+Renglones: 2
+
+¿Qué resultado obtienes? Los materiales que contienen "Si" al inicio
+Explica que hace el símbolo '%'. Funciona como un comodín: equivale a cualquier cadena en la búsqueda.
+¿Qué sucede si la consulta fuera : LIKE 'Si' ? Solo buscaría el material llamado "Si"
+¿Qué resultado obtienes? Ninguno
+Explica a qué se debe este comportamiento. Porque no hay materiales que se llamen "Si", sin embargo, si hay materiales que empiezan con "Si" (Sillar rosa y Sillar gris).
+
+
+
+DECLARE @foo varchar(40);
+DECLARE @bar varchar(40);
+SET @foo = '¿Que resultado';
+SET @bar = ' ¿¿¿??? ';
+SET @foo += ' obtienes?';
+PRINT @foo + @bar;
+
+¿Qué resultado obtienes de ejecutar el siguiente código? ¿Que resultado obtienes? ¿¿¿??? 
+¿Para qué sirve DECLARE? Define elementos locales
+¿Cuál es la función de @foo? Almacenar cadenas, primero '¿Que resultado' y luego '¿Que resultado obtienes?'
+¿Que realiza el operador SET?
+
+
+
+SELECT RFC FROM Entregan WHERE RFC REGEXP '[A-D]';
+SELECT RFC FROM Entregan WHERE RFC LIKE '[A-D]%';
+
+AAAA800101
+AAAA800101
+BBBB800101
+
+Renglones: 47
+
+
+SELECT RFC FROM Entregan WHERE RFC NOT LIKE 'A%';
+SELECT RFC FROM Entregan WHERE RFC LIKE '[^A]%';
+
+EEEE800101
+BBBB800101
+FFFF800101
+
+Renglones: 75
+
+
+SELECT Numero FROM Entregan WHERE Numero LIKE '___6';
+
+5006
+5016
+
+Renglones: 9
+
+
+
+SELECT Clave,RFC,Numero,Fecha,Cantidad
+FROM Entregan
+WHERE Numero BETWEEN 5000 AND 5010;
+
+1000	AAAA800101	5000	2001-12-13	165
+1010	BBBB800101	5001	1998-07-28	528
+1020	CCCC800101	5002	2003-12-16	582
+
+Renglones: 43
+
+¿Cómo filtrarías rangos de fechas? Usando el rengo de fecha de la misma manera e ingresando la columna correspondiente. Ej:
+SELECT Clave,RFC,Numero,Fecha,Cantidad
+FROM Entregan
+WHERE fecha BETWEEN '2000-01-01' AND '2000-12-31';
+
+
+
+
+SELECT RFC,Cantidad, Fecha,Numero
+FROM Entregan
+WHERE Numero Between 5000 and 5010 AND
+Exists ( SELECT RFC
+FROM Proveedores
+WHERE RazonSocial LIKE 'La%' and Entregan.RFC = Proveedores.RFC)
+
+AAAA800101	165	2001-12-13	5000
+AAAA800101	86	2005-04-03	5008
+AAAA800101	152	0000-00-00	5004
+
+Renglones: 12
+
+¿Qué hace la consulta? Devuelve los resultados RFC, Cantidad, Fecha y Numero si Numero se encuentra entre 5000 y 5010 y que entregan tenga al menos un registro en la tabla Proveedores donde la razón social empiece con "La".
+¿Qué función tiene el paréntesis ( ) después de EXISTS? Es una subconsulta, en la que si esta es veradera, el renglón se mostrará en los resultados.
+
+SELECT RFC, Cantidad, Fecha, Numero
+FROM Entregan
+WHERE Numero BETWEEN 5000 AND 5010
+AND RFC IN (
+	SELECT RFC
+	FROM Proveedores
+	WHERE RazonSocial LIKE 'La%');
+
+
+
+
+SELECT RFC, Cantidad, Fecha, Numero
+FROM Entregan
+WHERE Numero BETWEEN 5000 AND 5010
+AND RFC NOT IN (
+    SELECT RFC
+    FROM Proveedores
+    WHERE RazonSocial LIKE 'La%'
+)
+
+BBBB800101	528	1998-07-28	5001
+DDDD800101	202	1998-01-12	5003
+EEEE800101	263	1999-12-18	5004
+
+Renglones: 31
+
+
+
+SELECT RFC, Cantidad, Fecha, Numero
+FROM Entregan
+WHERE Clave > ANY (
+    SELECT Clave
+    FROM Materiales
+    WHERE Impuesto > 25
+);
+
+AAAA800101	162	1997-08-09	5016
+AAAA800101	244	2003-05-05	5019
+BBBB800101	180	2002-01-31	5017
+
+Renglones: 55
+
+
+
+SELECT TOP 2 FROM Proyectos;
+¿Qué hace la siguiente sentencia? Explica por qué. Selecciona los primeros dos renglones de Proyectos porque se le indica la cantidad (2).
+
+SELECT TOP Numero FROM Proyectos;
+¿Qué sucede con la siguiente consulta? Explica por qué. Marca un error porque no es un valor sino una columna.
+
+
+¿Qué consulta usarías para obtener el importe de las entregas es decir, el total en dinero de lo entregado, basado en la cantidad de la entrega y el precio del material y el impuesto asignado? 
+SELECT E.clave, SUM(M.precio * (M.PorcentajeImpuesto + 100) * 0.01 * E.cantidad) AS Total
+FROM Materiales M, Entregan E
+GROUP BY E.clave;
+
+1000	4281694.546600002
+1010	10740002.311400002
+1020	6029116.426
+
+Renglones: 44
+
+
+
+CREATE VIEW `Materiales Clave 1000` AS
+SELECT * FROM Materiales
+WHERE clave = 1000;
+
+CREATE VIEW `Entregan: Clave, RFC, Fecha` AS
+SELECT clave, rfc, fecha FROM entregan;
+
+CREATE VIEW `Materiales / Entregan` AS
+SELECT * FROM materiales M, entregan E
+WHERE M.clave = E.clave;
+
+CREATE VIEW `Entregan / Proyectos` AS
+SELECT * FROM entregan,proyectos
+WHERE entregan.numero <= proyectos.numero;
+
+CREATE VIEW `Union: Clave` AS
+(SELECT * FROM entregan WHERE clave=1450)
+UNION
+(SELECT * FROM entregan WHERE clave=1300);
+
+
+
+Los materiales (clave y descripción) entregados al proyecto "México sin ti no estamos completos".
+
+SELECT clave, descripcion
+FROM Materiales
+WHERE Clave IN (SELECT clave
+		FROM Proyectos
+		WHERE denominacion='Mexico sin ti no estamos completos')
+
+1000	Varilla 3/16
+1010	Varilla 4/32
+1020	Varilla 3/17
+
+Renglones: 45
+
+
+
+Los materiales (clave y descripción) que han sido proporcionados por el proveedor "Acme tools".
+
+SELECT M.clave, M.descripcion
+FROM Materiales M
+JOIN Entregan E ON M.clave = E.clave
+JOIN Proveedores P ON E.RFC = P.RFC
+WHERE P.razonsocial = 'Acem tools'
+GROUP BY M.Clave;
+
+Renglones: 0
+
+YA QUE NO EXISTE EL PROVEEDOR, EJEMPLO CON  'La Fragua'.
+
+SELECT M.clave, M.descripcion
+FROM Materiales M
+JOIN Entregan E ON M.clave = E.clave
+JOIN Proveedores P ON E.RFC = P.RFC
+WHERE P.razonsocial = 'La fragua'
+GROUP BY M.Clave;
+
+1000	Varilla 3/16
+1080	Ladrillos rojos
+1160	Cantera rosa
+
+Renglones: 6
+
+
+El RFC de los proveedores que durante el 2000 entregaron en promedio cuando menos 300 materiales.
+
+SELECT RFC
+FROM Entregan
+WHERE YEAR(fecha) = 2000
+GROUP BY RFC
+HAVING AVG(cantidad) >= 300;
+
+BBBB800101
+FFFF800101
+GGGG800101
+
+Renglones: 3
+
+
+
+El Total entregado por cada material en el año 2000.
+
+SELECT Clave, SUM(Cantidad) AS Total
+FROM Entregan
+WHERE YEAR(fecha) = 2000
+GROUP BY Clave;
+
+1020	8
+1050	623
+1100	466
+
+Renglones: 11
+
+
+
+La Clave del material más vendido durante el 2001. (se recomienda usar una vista intermedia para su solución)
+
+CREATE VIEW `Materiales2001` AS
+SELECT Clave, SUM(Cantidad) AS Total
+FROM Entregan
+WHERE YEAR(fecha) = 2001
+GROUP BY Clave;
+
+SELECT Clave, Total
+FROM `Materiales2001`
+WHERE Total = (SELECT MAX(Total) FROM `Materiales2001`);
+
+1260	1091
+
+Renglones: 1
+
+
+
+
+Productos que contienen el patrón 'ub' en su nombre.
+
+SELECT *
+FROM Materiales
+WHERE Descripcion LIKE '%ub%';
+
+1180	Recubrimiento P1001	200	20	2.36
+1190	Recubrimiento P1010	220	22	2.38
+1200	Recubrimiento P1019	240	24	2.40
+
+Renglones: 12
+
+
+
+Denominación y suma del total a pagar para todos los proyectos.
+
+SELECT E.clave, SUM(M.precio * (M.PorcentajeImpuesto + 100) * 0.01 * E.cantidad) AS Total
+FROM Materiales M, Entregan E
+GROUP BY E.clave;
+
+Tubasa	34059398.38620001
+Tabiquera del centro	41764404.8018
+Comex	29573327.011599984
+
+Renglones: 8
