@@ -1,0 +1,5 @@
+Lab 24 - Lab en proyecto buscador de aspirantes
+
+https://github.com/nicoleum17/TestInsightDX/commit/60404d9c4690b431b4d4661ae3c8819bbef0a2ee
+
+Se encuentra en ConsultaAspirante, los archivos cambiaron de nombre en la versión actual
